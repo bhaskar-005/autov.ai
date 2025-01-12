@@ -1,8 +1,11 @@
 "use client"
+import Badge from '@/components/Badge';
 import PageContent from '@/components/dashboard_ui/pagecontent';
 import TooltipComponent from '@/components/Tooltip';
 import { Button } from '@/components/ui/button';
-import { HelpCircle } from 'lucide-react';
+import { platforms } from '@/contant/Integration.conf';
+import { HelpCircle, Link, Star, TimerResetIcon } from 'lucide-react';
+import Image from 'next/image';
 import React, { useState } from 'react';
 
 interface Platform {
@@ -10,69 +13,36 @@ interface Platform {
   name: string;
   logo: string;
   description: string;
+  on_click: Function;
+  isAvailable: boolean;
 }
 
-const platforms: Platform[] = [
-  { 
-    id: 'facebook', 
-    name: 'Facebook', 
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg', 
-    description: 'Integrate your Facebook account for managing pages.' 
-  },
-  { 
-    id: 'youtube', 
-    name: 'YouTube', 
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/Youtube%28amin%29.png', 
-    description: 'Integrate your YouTube channel for video uploads.' 
-  },
-  { 
-    id: 'instagram', 
-    name: 'Instagram', 
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png', 
-    description: 'Integrate your Instagram account for posts and reels.' 
-  },
-  { 
-    id: 'tiktok', 
-    name: 'TikTok', 
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/TikTok_logo.svg', 
-    description: 'Integrate your TikTok account for short videos.' 
-  },
-  { 
-    id: 'x', 
-    name: 'X', 
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6f/X_logo_2023.svg', 
-    description: 'Integrate your X account for tweets and threads.' 
-  },
-];
-
-const PlatformCard: React.FC<{ platform: Platform; onIntegrate: (platform: Platform) => void }> = ({ platform, onIntegrate }) => {
+const PlatformCard: React.FC<{ platform: Platform }> = ({ platform}) => {
   return (
-    <div className="flex items-center justify-between border p-4 rounded-lg mb-4">
+    <div className="flex items-center justify-between border p-5 rounded-lg mt-6">
       <div className="flex items-center gap-4">
-        <img src={platform.logo} alt={platform.name} className="w-8 h-8" />
+        <img src={platform.logo} alt={platform.name} height={8} width={8} className="w-10 h-10" />
         <div>
-          <p className="font-medium text-sm">{platform.name}</p>
-          <p className="text-xs text-gray-500">{platform.description}</p>
+          <div className='flex items-center gap-4'>
+          <p className="font-medium text-gray-700 text-base">{platform.name}</p> 
+           {
+            !platform.isAvailable && (
+              <Badge content={
+                <p className='text-xs px-1'>coming soon</p>
+            }/>
+            )
+           }
+          </div>
+          <p className="text-xs text-gray-500 mt-1">{platform.description}</p>
         </div>
       </div>
-      <Button onClick={() => onIntegrate(platform)} className="text-sm">Integrate</Button>
+      <Button onClick={() => platform.on_click()} className={`text-sm font-normal text-gray-600 w-60 ${!platform.isAvailable ? "cursor-not-allowed":"cursor-pointer"}`} variant={"outline"} ><Link/> Integrate {platform.name}</Button>
     </div>
   );
 };
 
 const Page: React.FC = () => {
-  const [integratedPlatforms, setIntegratedPlatforms] = useState<Platform[]>([{ 
-    id: 'instagram', 
-    name: 'Instagram', 
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png', 
-    description: 'Integrate your Instagram account for posts and reels.' 
-  },]);
-
-  const handleIntegrate = (platform: Platform) => {
-    if (!integratedPlatforms.some((p) => p.id === platform.id)) {
-      setIntegratedPlatforms((prev) => [...prev, platform]);
-    }
-  };
+  const [integratedPlatforms, setIntegratedPlatforms] = useState<Platform[]>([]);
 
   return (
     <PageContent
@@ -96,7 +66,7 @@ const Page: React.FC = () => {
     >
       <div>
         {platforms.map((platform) => (
-          <PlatformCard key={platform.id} platform={platform} onIntegrate={handleIntegrate} />
+          <PlatformCard key={platform.id} platform={platform} />
         ))}
       </div>
 
