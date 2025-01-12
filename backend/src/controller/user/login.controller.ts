@@ -1,0 +1,63 @@
+import { Request, Response } from "express"
+import { response } from "../../utils/responseFormate";
+import axios from "axios";
+import prisma from "../../utils/db";
+import { genereateJwtToken } from "../../utils/generateJwt";
+import useragent from 'useragent';
+
+export const loginController:any = async (req:Request, res:Response) => {
+    const {code} = req.body();
+    try {
+      if (!code) {
+       response.error(res, "Code not found", 422); 
+      }  
+      const googleVerifyUrl = `https://oauth2.googleapis.com/tokeninfo?id_token=${code}`;
+      const googleResponse = await axios.get(googleVerifyUrl, {
+        responseType: "json",
+      });
+
+      console.log(googleResponse);
+
+      let isUserExists = await prisma.user.findFirst({
+        where:{
+            email:googleResponse.data.email
+        }
+      })
+      
+      //device info with ip
+      const agent = useragent.parse(req.headers['user-agent'] || "");
+      const device = `${agent.os} - ${agent.toAgent()}`;
+      const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress!;
+     
+      if(!isUserExists){
+        isUserExists = await prisma.user.create({
+            data:{
+                email:googleResponse.data.email,
+                username:googleResponse.data.username,
+                avatar:googleResponse.data.picture
+            }
+        })
+      }
+    
+    await prisma.loginActivity.create({
+      data:{
+        userId: isUserExists.id,
+        ip: ipAddress?.toString(),
+        device: device
+      }  
+    })
+    
+    const payload = {
+        id: isUserExists.id,
+        email: isUserExists.email
+    } 
+
+    const token = genereateJwtToken(payload);
+    res.cookie("auth_token", token, {httpOnly: true})
+    return response.message(res, "sign up successfull.", 200, {token})
+    
+
+    } catch (error) {
+        return response.error(res, "failed to login/signup", 403, {error})
+    }
+}
