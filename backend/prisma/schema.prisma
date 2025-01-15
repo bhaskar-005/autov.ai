@@ -81,13 +81,14 @@ enum PlatformEnum {
   TikTok
   Instagram
 }
-
+//name space
 model SocialAccountGroup {
   id                   Int                  @unique @id @default(autoincrement())
   userId               Int
   groupUser            User                 @relation(fields: [userId], references: [id])
 
   groupName            String
+  groupDescription     String?
   youtubeCredentials   YoutubeCredential[]
   facebookCredentials  FacebookCredential[]
   instagramCredentials InstagramCredential[]

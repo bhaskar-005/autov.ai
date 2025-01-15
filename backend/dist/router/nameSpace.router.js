@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const name_space_controller_1 = require("../controller/user/name-space.controller");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const router = (0, express_1.Router)();
+router.get('/get-name-space/:page', authMiddleware_1.authMiddleware, name_space_controller_1.getNameSpace);
+router.post("/create-name-space", authMiddleware_1.authMiddleware, name_space_controller_1.createNameSpace);
+router.delete("/delete-name-space/:groupId", authMiddleware_1.authMiddleware, name_space_controller_1.deleteNameSpace);
+router.put("/update-name-space/:groupId", authMiddleware_1.authMiddleware, name_space_controller_1.updateNameSpace);
+exports.default = router;

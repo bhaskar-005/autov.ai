@@ -2,13 +2,16 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import authRoute from './router/auth.router';
+import cookieParser from 'cookie-parser';
+import nameSpaceRoute from './router/nameSpace.router';
 
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
-
+app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(cors({
     origin: process.env.CLIENT_HOST,
@@ -22,6 +25,8 @@ app.get('/status', (req:Request, res:Response):any => {
     })
 })
 
+app.use('/api/v1/auth', authRoute);
+app.use('/api/v1', nameSpaceRoute);
 app.listen(port, () => {
     console.log(`listening on http://localhost:${port}`);
 })

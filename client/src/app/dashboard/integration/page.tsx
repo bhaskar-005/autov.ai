@@ -4,8 +4,7 @@ import PageContent from '@/components/dashboard_ui/pagecontent';
 import TooltipComponent from '@/components/Tooltip';
 import { Button } from '@/components/ui/button';
 import { platforms } from '@/contant/Integration.conf';
-import { HelpCircle, Link, Star, TimerResetIcon } from 'lucide-react';
-import Image from 'next/image';
+import { HelpCircle, Link   } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface Platform {
@@ -36,7 +35,12 @@ const PlatformCard: React.FC<{ platform: Platform }> = ({ platform}) => {
           <p className="text-xs text-gray-500 mt-1">{platform.description}</p>
         </div>
       </div>
-      <Button onClick={() => platform.on_click()} className={`text-sm font-normal text-gray-600 w-60 ${!platform.isAvailable ? "cursor-not-allowed":"cursor-pointer"}`} variant={"outline"} ><Link/> Integrate {platform.name}</Button>
+      <Button 
+       onClick={() => platform.on_click()}
+       className={`text-sm font-normal text-gray-600 w-60 ${!platform.isAvailable ? "cursor-not-allowed":"cursor-pointer"}`} 
+       variant={"outline"}>
+        <Link/> Integrate {platform.name}
+      </Button>
     </div>
   );
 };
