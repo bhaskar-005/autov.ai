@@ -14,10 +14,9 @@ const oauth2Client = new OAuth2Client(
     keys.redirect_uri
 ) 
 
-export async function GET(req: NextApiRequest) {
-  const { searchParams } = new URL(req.url!);
-  const code = searchParams.get('code');
-  console.log("code", code);
+export async function GET(req: NextApiRequest) { const { searchParams } = new URL(req.url!);
+const code = searchParams.get('code');
+console.log("code", code);
   console.log("----------------");
   
   if (!code) {

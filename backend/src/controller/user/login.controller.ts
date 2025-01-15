@@ -6,10 +6,12 @@ import { genereateJwtToken } from "../../utils/generateJwt";
 import useragent from 'useragent';
 
 export const loginController:any = async (req:Request, res:Response) => {
-    const {code} = req.body();
+    const {code} = req.body;
+    console.log(code);
+    
     try {
       if (!code) {
-       response.error(res, "Code not found", 422); 
+       return response.error(res, "Code not found", 422); 
       }  
       const googleVerifyUrl = `https://oauth2.googleapis.com/tokeninfo?id_token=${code}`;
       const googleResponse = await axios.get(googleVerifyUrl, {
@@ -33,8 +35,8 @@ export const loginController:any = async (req:Request, res:Response) => {
         isUserExists = await prisma.user.create({
             data:{
                 email:googleResponse.data.email,
-                username:googleResponse.data.username,
-                avatar:googleResponse.data.picture
+                username:googleResponse.data.name,
+                avatar:googleResponse.data.picture || `https://ui-avatars.com/api/?name=${googleResponse.data.name}`
             }
         })
       }
@@ -53,11 +55,13 @@ export const loginController:any = async (req:Request, res:Response) => {
     } 
 
     const token = genereateJwtToken(payload);
-    res.cookie("auth_token", token, {httpOnly: true})
-    return response.message(res, "sign up successfull.", 200, {token})
+    res.cookie("auth_token", token, {httpOnly: true, maxAge: 3600000})
+    return response.message(res, "sign up successfull.", 200, {token,user:isUserExists})
     
 
     } catch (error) {
-        return response.error(res, "failed to login/signup", 403, {error})
+        console.log(error);
+        
+        return response.error(res, "failed to login/signup", 403, {error});
     }
 }

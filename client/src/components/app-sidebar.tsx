@@ -13,9 +13,13 @@ import {
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { group1, group2, group3, userAvatarDropdown } from "@/contant/sidebar.conf";
+import { useUserInfo } from "@/zustand/userState";
 
 
 export function AppSidebar() {
+  const userInfo = useUserInfo((state)=> state.userInfo);
+  console.log(userInfo);
+  
   return (
     <Sidebar >
       <SidebarHeader>
@@ -89,15 +93,15 @@ export function AppSidebar() {
                   <span className="flex items-center gap-2 py-2">
                     <img
                       className="size-8 rounded-full bg-black"
-                      src="/file.svg"
+                      src={userInfo?.avatar||"/file.svg"}
                       alt="Jenny Hamilton"
                       width={40}
                       height={40}
                     />
                     <span>
-                      <span className="block font-medium text-sm">Jenny Hamilton</span>
+                      <span className="block font-medium text-sm">{userInfo?.username}</span>
                       <span className="mt-0.5 block text-xs text-muted-foreground">
-                        @jennycodes
+                       {userInfo?.email} 
                       </span>
                     </span>
                   </span>
