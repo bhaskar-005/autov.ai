@@ -19,18 +19,18 @@ const getNameSpace = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     const page = parseInt(req.params.page) || 1;
     const limit = 10;
     //@ts-ignore
-    const { userId } = req.userId;
+    const userId = req.userId;
     console.log(userId, page);
     const skip = (page - 1) * limit;
     try {
         const totalNameSpace = yield db_1.default.socialAccountGroup.count({
             where: {
-                id: userId
+                userId
             }
         });
         const nameSpaceData = yield db_1.default.socialAccountGroup.findMany({
             where: {
-                id: userId
+                userId
             },
             skip,
             take: limit,

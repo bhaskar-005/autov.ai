@@ -64,10 +64,11 @@ const ProjectsPage = () => {
       {selectedProject && (
         <Modal
           name={selectedProject.name}
-          description={selectedProject.description}
           isOpen={!!selectedProject}
           onClose={() => setSelectedProject(null)}
-        />
+        >
+          <div>hi</div>
+        </Modal>
       )}
     </PageContent>
   );
