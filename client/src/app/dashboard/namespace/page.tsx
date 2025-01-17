@@ -1,5 +1,4 @@
 import PageContent from '@/components/dashboard_ui/pagecontent';
-import { Suspense } from 'react';
 import NameSpaceContant from './NameSpaceContant';
 
 const index = async() => {

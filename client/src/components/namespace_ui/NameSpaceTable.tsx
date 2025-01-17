@@ -104,7 +104,7 @@ const NameSpaceTable = ({NameSpaceData, onAddHandler, onDeleteHandler, onEditHan
                   NameSpaceActions.map((action)=>(
                   <DropdownMenuItem
                    onClick={()=> action.handler(id)}
-                   className={`${action.destructive?"bg-red-700/30":""}`}>
+                   className={`${action.destructive?"bg-red-600 bg-opacity-20":""}`}>
                    {action.name} 
                   </DropdownMenuItem>
                   ))

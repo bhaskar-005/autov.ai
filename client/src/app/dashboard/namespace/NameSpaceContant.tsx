@@ -15,7 +15,6 @@ type modeStateType = {
 }
 
 const NameSpaceContant = ()=>{
-    const [selectedNameSpace, setSelectedNameSpace] = useState<string|number|null>(null);
     const [modalState, setModalState] = useState<modeStateType>({mode: null, seletedNameSpaceId: null})  
     const [currentPage, setCurrentPage] = useState(1);
     const getNameSpace = useNameSpace((state)=> state.getNameSpace);
@@ -24,9 +23,13 @@ const NameSpaceContant = ()=>{
     const nameSpaceCreateHandler = useNameSpace((state)=> state.createNameSpace)
     const nameSpaeceEditHandler = useNameSpace((state)=> state.updateNameSpace)
     const deleteNameSpaceHandler = useNameSpace((state)=> state.deleteNameSpace) 
- 
+
+    console.log(nameSpaceData);
+    
     useEffect(() => {
-      getNameSpace(currentPage);
+      if (!nameSpaceData || nameSpaceData.length === 0 ) {
+        getNameSpace(currentPage);
+      }
     }, [currentPage]);
   
   return (

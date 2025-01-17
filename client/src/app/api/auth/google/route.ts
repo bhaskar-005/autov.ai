@@ -36,5 +36,5 @@ export function GET(req: NextApiRequest) {
     });
 
     console.log(url);
-    return NextResponse.redirect(url);
+    return NextResponse.json(url);
 }
