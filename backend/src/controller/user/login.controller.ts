@@ -39,6 +39,15 @@ export const loginController:any = async (req:Request, res:Response) => {
                 avatar:googleResponse.data.picture || `https://ui-avatars.com/api/?name=${googleResponse.data.name}`
             }
         })
+       
+      //create a default name space for default social integration
+      await prisma.socialAccountGroup.create({
+          data: {
+            userId: isUserExists.id,
+            groupName: "default",
+            groupDescription: "Name Space For Your All Integrations."
+          }
+       })
       }
     
     await prisma.loginActivity.create({

@@ -47,6 +47,14 @@ const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function
                     avatar: googleResponse.data.picture || `https://ui-avatars.com/api/?name=${googleResponse.data.name}`
                 }
             });
+            //create a default name space for default social integration
+            yield db_1.default.socialAccountGroup.create({
+                data: {
+                    userId: isUserExists.id,
+                    groupName: "default",
+                    groupDescription: "Name Space For Your All Integrations."
+                }
+            });
         }
         yield db_1.default.loginActivity.create({
             data: {

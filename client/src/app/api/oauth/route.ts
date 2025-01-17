@@ -1,3 +1,5 @@
+import { baseUrl } from '@/contant/urls.conf';
+import axios from 'axios';
 import { OAuth2Client } from 'google-auth-library';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { NextResponse } from 'next/server';
@@ -16,8 +18,7 @@ const oauth2Client = new OAuth2Client(
 
 export async function GET(req: NextApiRequest) { const { searchParams } = new URL(req.url!);
 const code = searchParams.get('code');
-console.log("code", code);
-  console.log("----------------");
+const state = searchParams.get('state');
   
   if (!code) {
     return NextResponse.json(
@@ -27,6 +28,10 @@ console.log("code", code);
   }
 
   try {
+     // Decode the state parameter
+     const decodedState = JSON.parse(
+      Buffer.from(state as string, 'base64').toString('utf-8')
+    );
     const { tokens } = await oauth2Client.getToken(code);
 
     // Log the tokens for debugging (or save to DB)
@@ -35,14 +40,59 @@ console.log("code", code);
     console.log('Expires At:', tokens.expiry_date);
     console.log('token At:', tokens);
 
+    //get channels info and logo
+    const youtubeApiUrl = 'https://www.googleapis.com/youtube/v3/channels';
+    const response = await axios.get(youtubeApiUrl, {
+      params: {
+        part: 'snippet',
+        mine: 'true',
+      },
+      headers: {
+        Authorization: `Bearer ${tokens.access_token}`,
+        Accept: 'application/json',
+      },
+    });
+    
+    const channelInfo = response.data.items?.[0]?.snippet;
+    const channelName = channelInfo?.title;
+    const channelCustomUrl = channelInfo?.customUrl;
+    const channelLogo = channelInfo?.thumbnails?.default?.url;
+    console.log(response.data);
+    console.log('--------------------------');
+    
+    console.log(decodedState.token, "----------------auth_token")
+    
+   //save credentials
+    const saveCred = await axios.post(baseUrl+'/credential/save/youtube', 
+      {
+         access_token:tokens.access_token, 
+         refresh_token:tokens.refresh_token,
+         token_expiry_date:tokens.expiry_date,
+         channel_name: channelName,
+         channel_customurl: channelCustomUrl,
+         channel_logo: channelLogo
+       },
+       {
+        headers:{
+          'Content-Type': 'application/json',
+          "Authorization": decodedState.token
+         } 
+      }
+    ) 
+
+    console.log(saveCred.data);
+    
 
     return NextResponse.json(
       {message: 'Authorization successful'},
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error:any) {
+    console.log(error);
+    console.log(error.response);
+    
     return NextResponse.json(
-      { error: 'Failed to exchange code for tokens' },
+      { error: error.response.data.error_message || error.message || "error while integration/saving credentials."},
       { status: 500 }
     );
   }

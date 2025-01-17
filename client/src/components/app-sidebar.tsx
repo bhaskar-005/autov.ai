@@ -14,12 +14,13 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { group1, group2, group3, userAvatarDropdown } from "@/contant/sidebar.conf";
 import { useUserInfo } from "@/zustand/userState";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 
 export function AppSidebar() {
   const userInfo = useUserInfo((state)=> state.userInfo);
-  console.log(userInfo);
-  
+  const router = useRouter(); 
   return (
     <Sidebar >
       <SidebarHeader>
@@ -35,10 +36,10 @@ export function AppSidebar() {
               {group1.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -53,10 +54,10 @@ export function AppSidebar() {
               {group2.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -71,10 +72,10 @@ export function AppSidebar() {
               {group3.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

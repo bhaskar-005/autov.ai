@@ -21,7 +21,7 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     try {
         const decode = jsonwebtoken_1.default.verify(auth_token, process.env.JWT_SECRET_KEY);
         console.log(decode);
-        const isUserExists = yield db_1.default.user.findUnique({
+        const isUserExists = yield db_1.default.user.findFirst({
             where: {
                 id: decode.id,
             }

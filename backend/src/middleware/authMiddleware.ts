@@ -10,7 +10,7 @@ export const authMiddleware:any = async(req: Request, res: Response, next: NextF
      
      console.log(decode);
      
-     const isUserExists = await prisma.user.findUnique({
+     const isUserExists = await prisma.user.findFirst({
         where:{
             id: decode.id,
         }
