@@ -1,19 +1,7 @@
 import { baseUrl } from "@/contant/urls.conf"
 import axiosInstance from "../axiosInstance"
 import { getLocalStorageItem } from "@/lib/local-storage";
-
-type createProjectBody = {
-    project_name:string,
-    project_description: string|null,
-    video_url: string,
-    is_auto_generated: boolean,   //as of now only support auto_generated.
-    name_space_id: string
-    auto_upload: boolean
-    number_of_clips: number,
-    upload_time: string|null,
-
-    speech_language: string,
-}
+import { ProjectInputType } from "@/zod/projectSchema";
 
 const Token = getLocalStorageItem('auth_token');
 const headers = {
@@ -26,7 +14,7 @@ export const ProjectApi = {
      return await axiosInstance.get(baseUrl+`/project/get-project/${page}`, {headers});
     },
 
-    createProject: async(body:createProjectBody)=>{
+    createProject: async(body:ProjectInputType)=>{
      return await axiosInstance.post(baseUrl+`/project/create-project`, {...body}, {headers})
     }
 }

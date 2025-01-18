@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import {z} from 'zod';
 
-export const projectBodySchema = z.object({
+export const projectFormSchema = z.object({
     project_name: z.string({ required_error: "Project name is required" }),
     project_description: z.string().optional(),
     video_url: z.string().url({ message: "Please enter a valid video URL" }),
@@ -17,4 +17,6 @@ export const projectBodySchema = z.object({
           message: "Upload time is required",
           path: ["upload_time"]
       }
-)
+  )
+ 
+export type ProjectInputType = z.infer<typeof projectFormSchema>;
