@@ -89,7 +89,7 @@ export const CreateProject:any = async(req:Request, res:Response )=>{
 
       //todo push it to the queue
       
-      return response.message(res, "Project added to queue successfully", 200, {createUpload} )
+      return response.message(res, "Project added to queue successfully", 200, {project:createUpload} )
 
     } catch (error) {
        console.log(error);

@@ -9,6 +9,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const auth_router_1 = __importDefault(require("./router/auth.router"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const project_router_1 = __importDefault(require("./router/project.router"));
 const nameSpace_router_1 = __importDefault(require("./router/nameSpace.router"));
 const integrationCrediantial_router_1 = __importDefault(require("./router/integrationCrediantial.router"));
 dotenv_1.default.config();
@@ -28,6 +29,7 @@ app.get('/status', (req, res) => {
 app.use('/api/v1/auth', auth_router_1.default);
 app.use('/api/v1', nameSpace_router_1.default);
 app.use('/api/v1/credential', integrationCrediantial_router_1.default);
+app.use('/api/v1/project', project_router_1.default);
 app.listen(port, () => {
     console.log(`listening on http://localhost:${port}`);
 });
