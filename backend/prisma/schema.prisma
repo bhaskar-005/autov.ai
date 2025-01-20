@@ -47,10 +47,10 @@ model LoginActivity {
 }
 
 enum UploadStatus {
-  Panding
+  Pending
   InProgress
   Successful
-  Faild
+  Failed
 }
 
 // project >>
@@ -72,8 +72,10 @@ model Upload {
   groupId              Int
   socialAccountGroup   SocialAccountGroup     @relation(fields: [groupId], references: [id])
 
-  uploadStatus         UploadStatus           @default(Panding) 
-  clips                ClipInfo[] 
+  uploadStatus         UploadStatus           @default(Pending) 
+  clips                ClipInfo[]
+
+  outbox               Outbox?                 @relation
   speechLanguage       String                 @default("Hindi") 
 }
 
@@ -200,3 +202,21 @@ model TikTokCredential {
   
 }
 
+enum EventType {
+  GENERATE_CLIPS
+  UPLOAD_CLIPS
+}
+
+//store outbox for only 30 days
+model Outbox {
+  id             String        @default(cuid()) @unique
+  eventType      EventType
+  payload        Json
+  uploadId       String        @unique
+  upload         Upload        @relation(fields: [uploadId], references: [id])
+  //instead of deleting the outbox pattern update the status
+  status         UploadStatus  @default(Pending) 
+  retryCount     Int           @default(0)
+  createdAt      DateTime      @default(now())
+  processedAt    DateTime?       
+}

@@ -9,6 +9,7 @@ import {
   LogOut,
   LucideLink2,
   Settings,
+  SquarePen,
   User,
 } from "lucide-react";
 
@@ -27,10 +28,16 @@ export const group1 = [
 ];
 export const group2 = [
   {
+    title: "Create Project",
+    url: "/dashboard/projects/create",
+    icon: SquarePen,
+  },
+  {
     title: "Projects",
     url: "/dashboard/projects",
     icon: FileVideoIcon,
   },
+
   {
     title: "Integration",
     url: "/dashboard/integration",
