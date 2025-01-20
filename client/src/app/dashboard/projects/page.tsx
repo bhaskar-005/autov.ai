@@ -33,7 +33,7 @@ const ProjectsPage = () => {
         </section>
         
         {/* table component  */}
-            <ProjectTable
+          <ProjectTable
             isLoading={ProjectLoading}
             projects={projects || []}
             onViewDetails={(projectInfo: ProjectType) =>
