@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { CalendarIcon, Upload, Video, Info, Layout, Eye, LoaderIcon } from "lucide-react";
+import { CalendarIcon, Upload, Video, Info, Layout, Eye, LoaderIcon, Loader } from "lucide-react";
 import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
@@ -46,6 +46,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNameSpace } from "@/zustand/nameSpaceState";
 import { speechLanguage } from "@/contant/Projects.conf";
 import { projectFormSchema } from "@/zod/projectSchema";
+import { useProjectStore } from "@/zustand/projectState";
 
 function YouTubeEmbed({ url }: { url: string }) {
   try {
@@ -74,7 +75,8 @@ function page() {
   let   namespaces = useNameSpace((state)=> state.nameSpace);
   const getNameSpace = useNameSpace((state)=> state.getNameSpace);
   const loadingNameSpace = useNameSpace((state)=> state.loading);
-
+  const ProjectLoading = useProjectStore((state)=> state.loading);
+  const createProject = useProjectStore((state)=> state.createProject);
  
  const form = useForm<z.infer<typeof projectFormSchema>>({
     resolver: zodResolver(projectFormSchema),
@@ -90,6 +92,7 @@ function page() {
 
   function onSubmit(values: z.infer<typeof projectFormSchema>) {
     console.log(values);
+    createProject(values);
   }
  
   useEffect(()=>{
@@ -373,9 +376,17 @@ function page() {
                     />
                   )}
 
-                  <Button type="submit" className="w-full">
-                    <Upload className="mr-2 h-4 w-4" />
-                    Create Project
+                  <Button type="submit" className="w-full" disabled={ProjectLoading}>
+                    {ProjectLoading ? (
+                        <>
+                         <Loader  className="mr-2 h-4 w-4 animate-spin opacity-70" /> Creating Project
+                        </>
+                    ):(
+                        <>
+                           <Upload className="mr-2 h-4 w-4" />
+                           Create Project
+                        </>
+                    ) }
                   </Button>
                 </form>
               </Form>

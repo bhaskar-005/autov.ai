@@ -2,10 +2,11 @@ import { z } from "zod";
 import { ProjectApi } from "@/services/apis/projectApi";
 import { create } from "zustand";
 import { ProjectInputType } from "@/zod/projectSchema";
+import { ProjectType } from "@/components/project_ui/ProjectTable";
 
 type ProjectStoreType = {
   loading: boolean;
-  projectData: any[] | null; 
+  projectData: ProjectType[] | null; 
   totalProjectCount: number;
   getProjects: (page: number) => void;
   createProject: (data:ProjectInputType) =>void;
@@ -35,6 +36,8 @@ export const useProjectStore = create<ProjectStoreType>((set) => ({
     try {
       const response = await ProjectApi.createProject(projectData); 
       const createdProject = response.data.data.project; 
+      console.log(response.data.data);
+      
       set((state) => ({
         projectData: [createdProject, ...(state.projectData || [])],
       }));
