@@ -208,6 +208,8 @@ enum EventType {
 }
 
 //store outbox for only 30 days
+// also sent the video quality free users 480 and for primem users 720 and 1080p
+
 model Outbox {
   id             String        @default(cuid()) @unique
   eventType      EventType
